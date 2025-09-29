@@ -9,6 +9,7 @@ packages = [
     { include = "lkh" },
     { include = "tsplib95", from="tsplib95"},
 ]
+exclude=["tests"]
 
 [tool.poetry.dependencies]
 python = "^3.3"
