@@ -1,4 +1,6 @@
 # PyLKH
+This is a fork of https://github.com/ben-hudson/pylkh with some of the dependencies updated and the `tsplib95` package integrated into the code (instead of used as an external package).
+
 This is a super simple Python wrapper for the constrained traveling salesman and vehicle routing problem solver called [LKH-3](http://akira.ruc.dk/~keld/research/LKH-3/).
 
 If you want to use this wrapper, you need to install LKH-3 first. For example, on Ubuntu:

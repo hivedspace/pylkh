@@ -1,7 +1,6 @@
 import math
-import tsplib95 as tsplib
 
-from tsplib95 import transformers, distances
+from .tsplib95 import transformers, distances, fields, models, exceptions
 
 
 distances.TYPES.update({
@@ -12,7 +11,7 @@ distances.TYPES.update({
 })
 
 
-class NodeListField(tsplib.fields.TransformerField):
+class NodeListField(fields.TransformerField):
     default = list
 
     @classmethod
@@ -21,7 +20,7 @@ class NodeListField(tsplib.fields.TransformerField):
         return transformers.ListT(value=node, terminal='-1')
 
 
-class CTSPSetField(tsplib.fields.TransformerField):
+class CTSPSetField(fields.TransformerField):
     default = dict
 
     @classmethod
@@ -32,7 +31,7 @@ class CTSPSetField(tsplib.fields.TransformerField):
 
 
 # demand can be multi-dimensional, for example in mPDTSP
-class DemandsField(tsplib.fields.TransformerField):
+class DemandsField(fields.TransformerField):
     default = dict
 
     @classmethod
@@ -48,31 +47,31 @@ class DemandsField(tsplib.fields.TransformerField):
         if len(dimensions) > 1:
             error = ('all demands must have the same dimensionality '
                      f'but got multiple dimensions {dimensions}')
-            raise tsplib.exceptions.ValidationError(error)
+            raise exceptions.ValidationError(error)
 
 
-class LKHProblem(tsplib.models.StandardProblem):
+class LKHProblem(models.StandardProblem):
     # extra spec fields
-    demand_dimension = tsplib.fields.IntegerField('DEMAND_DIMENSION')
-    distance = tsplib.fields.NumberField('DISTANCE')
-    risk_threshold = tsplib.fields.IntegerField('RISK_THRESHOLD')
-    salesmen = tsplib.fields.IntegerField('SALESMEN')
-    scale = tsplib.fields.IntegerField('SCALE')
-    service_time = tsplib.fields.NumberField('SERVICE_TIME')
-    vehicles = tsplib.fields.IntegerField('VEHICLES')
+    demand_dimension = fields.IntegerField('DEMAND_DIMENSION')
+    distance = fields.NumberField('DISTANCE')
+    risk_threshold = fields.IntegerField('RISK_THRESHOLD')
+    salesmen = fields.IntegerField('SALESMEN')
+    scale = fields.IntegerField('SCALE')
+    service_time = fields.NumberField('SERVICE_TIME')
+    vehicles = fields.IntegerField('VEHICLES')
 
     # extra data fields
     backhaul_section = NodeListField('BACKHAUL_SECTION')
     ctsp_set_section = CTSPSetField('CTSP_SET_SECTION')
     demand_section = DemandsField('DEMAND_SECTION') # draft limit has same unit as demand
     draft_limit_section = DemandsField('DRAFT_LIMIT_SECTION') # draft limit has same unit as demand
-    pickup_and_delivery_section = tsplib.fields.MatrixField('PICKUP_AND_DELIVERY_SECTION')
+    pickup_and_delivery_section = fields.MatrixField('PICKUP_AND_DELIVERY_SECTION')
     required_nodes_section = NodeListField('REQUIRED_NODES_SECTION')
-    service_time_section = tsplib.fields.MatrixField('SERVICE_TIME_SECTION')
-    time_window_section = tsplib.fields.MatrixField('TIME_WINDOW_SECTION')
-    mtsp_objective = tsplib.fields.StringField('MTSP_OBJECTIVE')
-    mtsp_min_size = tsplib.fields.IntegerField('MTSP_MIN_SIZE')
-    mtsp_max_size = tsplib.fields.IntegerField('MTSP_MAX_SIZE')
+    service_time_section = fields.MatrixField('SERVICE_TIME_SECTION')
+    time_window_section = fields.MatrixField('TIME_WINDOW_SECTION')
+    mtsp_objective = fields.StringField('MTSP_OBJECTIVE')
+    mtsp_min_size = fields.IntegerField('MTSP_MIN_SIZE')
+    mtsp_max_size = fields.IntegerField('MTSP_MAX_SIZE')
 
     # need to override `render` because spec fields must precede data fields according to TSPLIB format
     # we assume that data fields end with _SECTION, and we sort those to the end of the field list
